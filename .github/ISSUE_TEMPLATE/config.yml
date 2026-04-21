@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Q&A (GitHub Discussions)
+    url: https://github.com/thinkyou0714/github-flow-kit/discussions/categories/q-a
+    about: Ask questions about usage, configuration, or troubleshooting
+  - name: Show & Tell
+    url: https://github.com/thinkyou0714/github-flow-kit/discussions/categories/show-tell
+    about: Share how you're using github-flow-kit

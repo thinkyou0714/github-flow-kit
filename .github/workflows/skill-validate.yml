@@ -1,0 +1,101 @@
+name: Skill Validation
+
+on:
+  pull_request:
+    paths:
+      - '**/SKILL.md'
+      - '**/references/**'
+  push:
+    branches: [main]
+    paths:
+      - '**/SKILL.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          python3 - <<'EOF'
+          import yaml, sys, pathlib
+
+          REQUIRED_FIELDS = ['name', 'description', 'allowed-tools']
+          VALID_MODELS = [
+              'claude-sonnet-4-6',
+              'claude-opus-4-7',
+              'claude-haiku-4-5-20251001',
+          ]
+
+          errors = []
+          for skill_md in pathlib.Path('.').rglob('SKILL.md'):
+              content = skill_md.read_text(encoding='utf-8')
+              if not content.startswith('---'):
+                  errors.append(f"{skill_md}: Missing frontmatter")
+                  continue
+              parts = content.split('---')
+              if len(parts) < 3:
+                  errors.append(f"{skill_md}: Malformed frontmatter (no closing ---)")
+                  continue
+              try:
+                  fm = yaml.safe_load(parts[1])
+              except yaml.YAMLError as e:
+                  errors.append(f"{skill_md}: YAML parse error: {e}")
+                  continue
+              if not isinstance(fm, dict):
+                  errors.append(f"{skill_md}: Frontmatter is not a mapping")
+                  continue
+              for field in REQUIRED_FIELDS:
+                  if field not in fm:
+                      errors.append(f"{skill_md}: Missing required field '{field}'")
+              if 'model' in fm and fm['model'] not in VALID_MODELS:
+                  errors.append(f"{skill_md}: Invalid model '{fm['model']}'")
+              desc = fm.get('description', '')
+              if isinstance(desc, str) and len(desc) > 1536:
+                  errors.append(f"{skill_md}: description exceeds 1536 chars ({len(desc)})")
+
+          if errors:
+              print("SKILL.md validation FAILED:")
+              for e in errors:
+                  print(f"  {e}")
+              sys.exit(1)
+          print(f"All SKILL.md files valid ({len(list(pathlib.Path('.').rglob('SKILL.md')))} files checked).")
+          EOF
+
+      - name: Check for secrets in SKILL.md and references/
+        run: |
+          echo "Scanning for potential secrets..."
+          if grep -rn \
+            -e "sk-ant-" \
+            -e "ghp_" \
+            -e "AKIA[0-9A-Z]" \
+            -e "-----BEGIN.*PRIVATE" \
+            */SKILL.md */references/ 2>/dev/null; then
+            echo "ERROR: Potential secret found in skill files"
+            exit 1
+          fi
+          echo "No secrets detected."
+
+      - name: Check references exist
+        run: |
+          python3 - <<'EOF'
+          import re, pathlib, sys
+
+          errors = []
+          for skill_md in pathlib.Path('.').rglob('SKILL.md'):
+              content = skill_md.read_text(encoding='utf-8')
+              refs = re.findall(r'references/(\S+\.md)', content)
+              skill_dir = skill_md.parent
+              for ref in refs:
+                  ref_path = skill_dir / 'references' / ref
+                  if not ref_path.exists():
+                      errors.append(f"{skill_md} references '{ref}' but {ref_path} does not exist")
+
+          if errors:
+              print("Missing references:")
+              for e in errors:
+                  print(f"  {e}")
+              sys.exit(1)
+          print("All references exist.")
+          EOF

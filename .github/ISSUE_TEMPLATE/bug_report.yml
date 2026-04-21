@@ -1,0 +1,47 @@
+name: Bug Report
+description: Report a bug in a skill
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - pr-respond
+        - release-notes
+        - issue-triage
+        - repo-tour
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "Output of: gh --version && claude --version"
+      placeholder: "gh version 2.90.0 / claude 1.x.x"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command used
+      placeholder: "/pr-respond --pr 42"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior (sanitized — remove secrets)
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Terminal output (sanitized)
+      description: Remove any API keys, tokens, or personal information before pasting.

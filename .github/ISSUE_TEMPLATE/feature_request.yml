@@ -1,0 +1,44 @@
+name: Feature Request / New Skill Idea
+description: Suggest a new skill or improvement to an existing one
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        - New skill
+        - Improvement to existing skill
+        - New classification pattern (references/)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill? (if applicable)
+      options:
+        - pr-respond
+        - release-notes
+        - issue-triage
+        - repo-tour
+        - N/A (new skill)
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the time you currently spend doing this manually.
+      placeholder: "Currently I spend X minutes per week doing Y..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: input
+    id: time-saved
+    attributes:
+      label: Estimated time saved per week
+      placeholder: "2 hours"
