@@ -1,24 +1,13 @@
 ---
-name: issue-triage
-description: >-
-  Score and prioritize all open GitHub Issues by Impact x Effort x Urgency.
-  Outputs a triage matrix (TRIAGE.md), applies priority labels, and suggests
-  a sprint plan. Use when your issue backlog is overwhelming, you don't know
-  what to work on next, or you want a structured sprint plan.
-  Triggers on: "issue 整理", "バックログ整理", "何から手をつける",
-  "issue優先度", "sprint plan", "issue-triage", "issue triage".
-  DO NOT USE FOR: closing issues, writing code, or creating new issues.
-metadata:
-  github-path: issue-triage
-  github-ref: refs/heads/main
-  github-repo: https://github.com/thinkyou0714/github-flow-kit
 allowed-tools: Bash(gh issue *) Bash(gh auth *) Read Write
+argument-hint: '[--sprint <1w|2w|4w>] [--top <n>] [--label <label>] [--dry-run]'
 context: fork
-model: claude-sonnet-4-6
+description: 'Score and prioritize all open GitHub Issues by Impact x Effort x Urgency. Outputs a triage matrix (TRIAGE.md), applies priority labels, and suggests a sprint plan. Use when your issue backlog is overwhelming, you don''t know what to work on next, or you want a structured sprint plan. Triggers on: "issue 整理", "バックログ整理", "何から手をつける", "issue優先度", "sprint plan", "issue-triage", "issue triage". DO NOT USE FOR: closing issues, writing code, or creating new issues.'
 effort: high
-argument-hint: "[--sprint <1w|2w|4w>] [--top <n>] [--label <label>] [--dry-run]"
+license: MIT
+model: claude-sonnet-4-6
+name: issue-triage
 ---
-
 # Issue Triage Engine
 
 Prioritize your open issue backlog with structured scoring.

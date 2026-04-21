@@ -1,25 +1,13 @@
 ---
-name: repo-tour
-description: >-
-  Generate a comprehensive onboarding guide for any codebase. Produces a REPO_TOUR.md
-  with a 30-second summary, annotated directory tree, Mermaid architecture diagram,
-  key files list, and "where to look for X" quick-reference.
-  Use when you're new to a codebase, onboarding a team member, or need to document
-  the overall structure. Also useful after a major refactor to update understanding.
-  Triggers on: "このリポジトリを説明して", "コードベースを理解したい", "repo tour",
-  "architecture overview", "repo-tour", "onboarding", "どこから読めばいい".
-  DO NOT USE FOR: editing code, fixing bugs, or creating documentation beyond structure.
-metadata:
-  github-path: repo-tour
-  github-ref: refs/heads/main
-  github-repo: https://github.com/thinkyou0714/github-flow-kit
 allowed-tools: Bash(git *) Bash(find *) Read Glob Grep Write
+argument-hint: '[--depth <1-4>] [--focus <path>] [--output md|stdout] [--lang ja|en]'
 context: fork
-model: claude-sonnet-4-6
+description: 'Generate a comprehensive onboarding guide for any codebase. Produces a REPO_TOUR.md with a 30-second summary, annotated directory tree, Mermaid architecture diagram, key files list, and "where to look for X" quick-reference. Use when you''re new to a codebase, onboarding a team member, or need to document the overall structure. Also useful after a major refactor to update understanding. Triggers on: "このリポジトリを説明して", "コードベースを理解したい", "repo tour", "architecture overview", "repo-tour", "onboarding", "どこから読めばいい". DO NOT USE FOR: editing code, fixing bugs, or creating documentation beyond structure.'
 effort: high
-argument-hint: "[--depth <1-4>] [--focus <path>] [--output md|stdout] [--lang ja|en]"
+license: MIT
+model: claude-sonnet-4-6
+name: repo-tour
 ---
-
 # Repository Tour Generator
 
 Produce a complete codebase onboarding guide.

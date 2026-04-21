@@ -1,24 +1,13 @@
 ---
-name: pr-respond
-description: >-
-  Address open GitHub PR review comments automatically. For each unresolved comment,
-  classifies as MUST-FIX (edit code), ACK (reply only), or DISCUSS (ask back).
-  Edits the relevant files, commits, and drafts a response comment for each item.
-  Use when you receive PR review feedback and want to address all comments in one pass.
-  Triggers on: "PRのコメントに対応", "review comments", "address PR feedback",
-  "レビュー対応", "pr-respond", "コメント修正".
-  DO NOT USE FOR: creating new PRs, writing code from scratch, or Issue responses.
-metadata:
-  github-path: pr-respond
-  github-ref: refs/heads/main
-  github-repo: https://github.com/thinkyou0714/github-flow-kit
 allowed-tools: Bash(git *) Bash(gh pr *) Bash(gh auth *) Read Edit Glob Grep
+argument-hint: '[--pr <number>] [--dry-run] [--auto-push]'
 context: fork
-model: claude-sonnet-4-6
+description: 'Address open GitHub PR review comments automatically. For each unresolved comment, classifies as MUST-FIX (edit code), ACK (reply only), or DISCUSS (ask back). Edits the relevant files, commits, and drafts a response comment for each item. Use when you receive PR review feedback and want to address all comments in one pass. Triggers on: "PRのコメントに対応", "review comments", "address PR feedback", "レビュー対応", "pr-respond", "コメント修正". DO NOT USE FOR: creating new PRs, writing code from scratch, or Issue responses.'
 effort: high
-argument-hint: "[--pr <number>] [--dry-run] [--auto-push]"
+license: MIT
+model: claude-sonnet-4-6
+name: pr-respond
 ---
-
 # PR Review Comment Responder
 
 Systematically address all unresolved review comments on a GitHub PR.

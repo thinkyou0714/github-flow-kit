@@ -1,26 +1,13 @@
 ---
-name: release-notes
-description: >-
-  Generate human-readable release notes from git history and merged PRs.
-  Creates two versions: user-facing (what's new in plain language) and
-  developer-facing (conventional changelog format). Publishes as a GitHub
-  Release draft with auto-suggested semver bump.
-  Use when you're preparing a release, want to document what changed since
-  the last tag, or need to write CHANGELOG entries.
-  Triggers on: "リリースノート", "changelog", "release notes", "何が変わった",
-  "バージョンアップ", "release-notes".
-  DO NOT USE FOR: creating a new git tag, deploying to production.
-metadata:
-  github-path: release-notes
-  github-ref: refs/heads/main
-  github-repo: https://github.com/thinkyou0714/github-flow-kit
 allowed-tools: Bash(git *) Bash(gh pr *) Bash(gh release *) Bash(gh auth *) Read Glob
+argument-hint: '[--since <tag>] [--audience ja|en] [--type user|dev] [--dry-run]'
 context: fork
-model: claude-sonnet-4-6
+description: 'Generate human-readable release notes from git history and merged PRs. Creates two versions: user-facing (what''s new in plain language) and developer-facing (conventional changelog format). Publishes as a GitHub Release draft with auto-suggested semver bump. Use when you''re preparing a release, want to document what changed since the last tag, or need to write CHANGELOG entries. Triggers on: "リリースノート", "changelog", "release notes", "何が変わった", "バージョンアップ", "release-notes". DO NOT USE FOR: creating a new git tag, deploying to production.'
 effort: medium
-argument-hint: "[--since <tag>] [--audience ja|en] [--type user|dev] [--dry-run]"
+license: MIT
+model: claude-sonnet-4-6
+name: release-notes
 ---
-
 # Release Notes Generator
 
 Generate polished release notes from git log and merged PRs.
