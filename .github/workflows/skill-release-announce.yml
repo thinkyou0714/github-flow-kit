@@ -1,0 +1,38 @@
+name: Skill Release Announce
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Post to Slack
+        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          NAME="${{ github.event.release.name }}"
+          URL="${{ github.event.release.html_url }}"
+          BODY=$(echo '${{ toJSON(github.event.release.body) }}' | python3 -c 'import json,sys; print(json.load(sys.stdin)[:300])' 2>/dev/null || echo "")
+
+          PAYLOAD=$(python3 -c "
+          import json
+          payload = {
+              'text': f':rocket: *github-flow-kit {TAG} released!*\n>{NAME}\n\n{BODY}\n\n<{URL}|View Release> | \`gh skill update --all\` to upgrade'
+          }
+          print(json.dumps(payload))
+          ")
+
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
+
+      - name: Summary
+        run: |
+          echo "Release ${{ github.ref_name }} announced"
+          echo "Tag: ${{ github.ref_name }}"
+          echo "URL: ${{ github.event.release.html_url }}"
