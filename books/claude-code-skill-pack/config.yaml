@@ -1,0 +1,10 @@
+title: "Claude Code スキルパック完全ガイド — PR・リリース・Issue を全自動化する 4 スキルの使い倒し方"
+summary: "github-flow-kit の 4 スキル (pr-respond / release-notes / issue-triage / repo-tour) を使って、PR 対応・リリースノート生成・issue 優先付け・リポジトリ解析を全自動化する実践ガイド。インストールから本番運用まで、具体的なコマンド例と実際の出力サンプルで解説します。"
+topics:
+  - claudecode
+  - github
+  - productivity
+  - cli
+  - automation
+price: 980
+published: false

@@ -1,0 +1,27 @@
+title: "[Discussion] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feel free to share feedback, ideas, or questions about github-flow-kit.
+        日本語でも英語でもどちらでもどうぞ。
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Content
+      description: Your feedback, question, or idea.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Related skill (optional)
+      options:
+        - pr-respond
+        - release-notes
+        - issue-triage
+        - repo-tour
+        - General / Other
