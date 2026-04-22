@@ -23,7 +23,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue list --state open --limit 50 \
-            --json number,title,body,labels,comments,createdAt,reactions \
+            --json number,title,body,labels,comments,createdAt,reactionGroups \
             > /tmp/issues.json
           echo "count=$(cat /tmp/issues.json | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')" >> $GITHUB_OUTPUT
 
@@ -59,7 +59,7 @@ jobs:
               eff = effort(i.get('body', ''))
               age = (now - datetime.datetime.fromisoformat(i['createdAt'].replace('Z','+00:00'))).days
               comments = i.get('comments', 0)
-              reactions = (i.get('reactions') or {}).get('totalCount', 0)
+              reactions = sum(rg.get('users', {}).get('totalCount', 0) for rg in i.get('reactionGroups', []))
               urgency = (2 if age > 30 and comments >= 3 else 0) + (1 if reactions >= 5 else 0)
               score = imp * (6 - eff) + urgency
               scored.append({**i, 'score': score, 'impact': imp, 'effort': eff})
