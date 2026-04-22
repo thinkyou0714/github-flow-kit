@@ -147,6 +147,41 @@ MUST-FIX:
 
 ---
 
+## トラブルシューティング
+
+**`gh skill: unknown command "skill"` と表示される**
+
+GitHub CLI のバージョンが古い可能性があります。v2.90.0 以上が必要です。
+
+```bash
+gh --version
+# 古い場合:
+# macOS: brew upgrade gh
+# Ubuntu/WSL: sudo apt update && sudo apt upgrade gh
+# Windows: winget upgrade GitHub.cli
+```
+
+**`Error: permission denied` でインストールが失敗する**
+
+`--scope user` を指定しているか確認してください。`--scope global` が必要な場合は管理者権限で実行してください。
+
+```bash
+gh skill install thinkyou0714/github-flow-kit pr-respond \
+  --agent claude-code \
+  --scope user   # ← これを忘れずに
+```
+
+**`claude` コマンドが見つからない**
+
+Claude Code (CLI) がインストールされていない可能性があります。
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version  # 確認
+```
+
+---
+
 ## コスト
 
 1 PR あたり **約 ¥10〜40** (claude-sonnet-4-6 使用、Claude Code の API 使用量として課金)。
