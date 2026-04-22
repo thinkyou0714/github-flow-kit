@@ -1,0 +1,24 @@
+{
+  "name": "github-flow-kit",
+  "version": "1.0.0",
+  "description": "[![GitHub release](https://img.shields.io/github/v/release/thinkyou0714/github-flow-kit?color=blue)](https://github.com/thinkyou0714/github-flow-kit/releases) [![License: MIT](https://img.shields.io/github/license/thinkyou0714/github-flow-kit)](LICENSE) [![Stars](https://img.shields.io/github/stars/thinkyou0714/github-flow-kit?style=social)](https://github.com/thinkyou0714/github-flow-kit/stargazers) [![Issues](https://img.shields.io/github/issues/thinkyou0714/github-flow-kit)](https://github.com/thinkyou0714/github-flow-kit/issues)",
+  "main": "index.js",
+  "scripts": {
+    "new:article": "zenn new:article",
+    "preview": "zenn preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinkyou0714/github-flow-kit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thinkyou0714/github-flow-kit/issues"
+  },
+  "homepage": "https://github.com/thinkyou0714/github-flow-kit#readme",
+  "devDependencies": {
+    "zenn-cli": "^0.4.7"
+  }
+}
