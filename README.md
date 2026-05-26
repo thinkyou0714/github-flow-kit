@@ -22,8 +22,8 @@
 ## Quick Install
 
 ```bash
-# Install all 4 skills at once
-for skill in pr-respond release-notes issue-triage repo-tour; do
+# Install all 6 skills at once
+for skill in pr-respond release-notes issue-triage repo-tour gh-pr-perm-audit gh-repo-security-audit; do
   gh skill install thinkyou0714/github-flow-kit $skill --agent claude-code --scope user
 done
 ```
@@ -34,7 +34,9 @@ Or install individually:
 gh skill install thinkyou0714/github-flow-kit pr-respond     --agent claude-code --scope user
 gh skill install thinkyou0714/github-flow-kit release-notes  --agent claude-code --scope user
 gh skill install thinkyou0714/github-flow-kit issue-triage   --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit repo-tour      --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit repo-tour              --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit gh-pr-perm-audit       --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit gh-repo-security-audit --agent claude-code --scope user
 ```
 
 ---
@@ -47,6 +49,8 @@ gh skill install thinkyou0714/github-flow-kit repo-tour      --agent claude-code
 | [`release-notes`](#release-notes) | git log + merged PRs → user-facing + dev changelog | ~55 min → 6 min |
 | [`issue-triage`](#issue-triage) | Score 50+ issues by Impact×Effort → sprint plan + labels | Hours → 7 min |
 | [`repo-tour`](#repo-tour) | Explore codebase → REPO_TOUR.md with Mermaid diagram | 1-3h → 2 min |
+| [`gh-pr-perm-audit`](#gh-pr-perm-audit) | Flag repos where Actions can approve PRs (review-bypass) | manual audit → seconds |
+| [`gh-repo-security-audit`](#gh-repo-security-audit) | OpenSSF posture: token perms, branch protection, Dependabot | manual audit → seconds |
 
 ---
 
@@ -135,6 +139,36 @@ Understand any codebase in minutes.
 ```
 
 **Output:** `REPO_TOUR.md` with 30-second summary, annotated tree, Mermaid diagram.
+
+---
+
+### gh-pr-perm-audit
+
+Security-first audit of "Allow GitHub Actions to create and approve pull requests" across an account.
+
+```bash
+/gh-pr-perm-audit                       # audit the authenticated account
+/gh-pr-perm-audit --owner some-org      # a specific owner
+/gh-pr-perm-audit --allow ci-bot-repo   # mark a repo as intentionally allowed
+/gh-pr-perm-audit --json                # machine-readable
+```
+
+**Why:** `true` lets a workflow self-approve PRs and bypass required reviews ([OpenSSF](https://best.openssf.org/SCM-BestPractices/github/actions/actions_can_approve_pull_requests.html)). **Read-only** — prints the revert command for you to run.
+
+---
+
+### gh-repo-security-audit
+
+OpenSSF-aligned posture audit across every repo: token permissions, allowed-actions, branch protection, secret scanning, Dependabot.
+
+```bash
+/gh-repo-security-audit                  # audit the authenticated account
+/gh-repo-security-audit --owner some-org # a specific owner
+/gh-repo-security-audit --enable-dependabot  # the one safe opt-in fix (reversible)
+/gh-repo-security-audit --json           # machine-readable
+```
+
+**Output:** posture table + WARN (fixable) / INFO (hardening). Mutations stay manual except the optional Dependabot enable.
 
 ---
 
