@@ -26,7 +26,8 @@ A malicious PR reviewer submits a comment containing:
 ```
 
 **Mitigation in SKILL.md:**
-All skills sanitize comment/issue body text before processing. Detection patterns:
+Skills that process attacker-controlled text (`pr-respond`, `issue-triage`)
+sanitize comment/issue body text before processing. Detection patterns:
 ```
 </s>  <s>  [INST]  IGNORE PREVIOUS  SYSTEM:  <|im_start|>
 ignore all  new instructions  forget everything
@@ -39,9 +40,8 @@ On detection: truncate to first 100 chars, flag with `⚠️ POSSIBLE INJECTION 
 An Issue body references a file path containing secrets. The skill reads and includes the secrets in a PR comment.
 
 **Mitigation:**
-- `allowed-tools` restricts Read to non-sensitive paths
-- Skills never read: `**/.env*`, `**/secrets/**`, `**/*_key*`, `**/credentials.*`
-- If secret patterns (`sk-ant-`, `ghp_`, `AKIA`, `-----BEGIN`) are detected in issue/PR body: output warning and halt processing
+- Skill instructions prohibit reading: `**/.env*`, `**/secrets/**`, `**/*_key*`, `**/credentials.*`
+- If secret patterns (`sk-ant-`, `ghp_`, `AKIA`, `-----BEGIN`) are detected in an issue/PR body or an opened file: the skill halts and never echoes the value (implemented in `pr-respond` and `issue-triage`)
 
 ### A3: API Cost Amplification (Medium Risk)
 
@@ -49,18 +49,17 @@ An Issue body references a file path containing secrets. The skill reads and inc
 `issue-triage --limit 0` on a 5,000-issue repo causes excessive API charges.
 
 **Mitigation:**
-- Hard cap: `--limit` maximum is 500 items
-- Warn and ask confirmation when >100 items
-- Show estimated cost before processing
+- `issue-triage` fetches at most 200 issues per run (`gh issue list --limit 200`)
+- When more than 200 open issues exist, it warns and asks the user to narrow with `--label`
 
-### A4: CI/CD Pipeline Abuse (Low Risk, v3+)
+### A4: CI/CD Pipeline Abuse (Low Risk)
 
 **Attack scenario:**
 A malicious PR is merged, and GitHub Actions runs pr-respond with `--auto-push`, propagating the malicious commit.
 
-**Mitigation:**
-- `--auto-push` is disabled when `CI=true` environment variable is detected
-- GitHub Actions usage requires explicit `GITHUB_FLOW_KIT_ALLOW_PUSH=true` secret
+**Mitigation (implemented in `pr-respond`):**
+- `--auto-push` is disabled when the `CI=true` environment variable is detected
+- Pushing from CI requires an explicit `GITHUB_FLOW_KIT_ALLOW_PUSH=true` env var
 - All commits go through normal CI before being visible to other users
 
 ---

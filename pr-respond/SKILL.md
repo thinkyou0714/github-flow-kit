@@ -69,6 +69,19 @@ NEVER:
 - Change the PR title or description
 - Modify files matching: **/migrations/**, **/.env*, **/auth/**, **/.github/workflows/**
 
+### Secret & sensitive-path guardrails (A2)
+
+- NEVER read files matching `**/.env*`, `**/secrets/**`, `**/*_key*`, `**/credentials.*`.
+- If a comment body or a file you open contains a secret pattern
+  (`sk-ant-`, `ghp_`, `AKIA[0-9A-Z]`, `-----BEGIN ... PRIVATE`), do NOT echo it
+  back. Output `⚠️ SECRET DETECTED — halting to avoid exfiltration` and stop.
+
+### CI / auto-push gate (A4)
+
+- When the `CI` environment variable is `true` (i.e. running inside GitHub
+  Actions), `--auto-push` is DISABLED unless `GITHUB_FLOW_KIT_ALLOW_PUSH=true`
+  is also set. Otherwise skip the push and print the manual `git push` hint.
+
 If fix requires changing ≥3 files: output `[PR-SCOPE] Fix requires >3 files. Summarize and ask user to confirm.` and stop.
 If diff >50 lines: output `[PR-LARGE-DIFF] Diff is {N} lines. Show diff and ask: "Commit this? [y/N]"` and wait.
 
