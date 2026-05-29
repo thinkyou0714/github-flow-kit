@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release-notes-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
 jobs:
   generate-notes:
     runs-on: ubuntu-latest
@@ -25,58 +29,82 @@ jobs:
           else
             GIT_LOG=$(git log "${PREV_TAG}..HEAD" --oneline --no-merges)
           fi
-          echo "log<<EOF" >> $GITHUB_OUTPUT
-          echo "$GIT_LOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+          {
+            echo "log<<GFKEOF"
+            echo "$GIT_LOG"
+            echo "GFKEOF"
+            echo "prev_tag=$PREV_TAG"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Generate user-facing release notes via Claude API
         id: notes
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Route the (untrusted) commit log through env, never inline into the
+          # shell, to prevent script injection from crafted commit messages.
+          GIT_LOG: ${{ steps.log.outputs.log }}
         run: |
           if [ -z "$ANTHROPIC_API_KEY" ]; then
             echo "ANTHROPIC_API_KEY not set — skipping note generation"
             exit 0
           fi
 
-          PROMPT="You are writing user-facing GitHub release notes for github-flow-kit, a Claude Code skill pack for GitHub developers. \
-          Summarize the following commits in plain language for non-technical users. \
-          Use sections: ## What's New, ## Bug Fixes, ## Notes. Skip internal/chore commits. \
-          Respond in the same language as the commit messages (Japanese if JP commits). \
-          Commits: ${{ steps.log.outputs.log }}"
+          # Build the request body in Python so all interpolation is JSON-safe.
+          REQUEST=$(python3 -c '
+          import json, os
+          git_log = os.environ.get("GIT_LOG", "")
+          prompt = (
+              "You are writing user-facing GitHub release notes for github-flow-kit, "
+              "a Claude Code skill pack for GitHub developers. "
+              "Summarize the following commits in plain language for non-technical users. "
+              "Use sections: ## What'"'"'s New, ## Bug Fixes, ## Notes. "
+              "Skip internal/chore commits. "
+              "Respond in the same language as the commit messages (Japanese if JP commits). "
+              f"Commits: {git_log}"
+          )
+          print(json.dumps({
+              "model": "claude-sonnet-4-6",
+              "max_tokens": 1024,
+              "messages": [{"role": "user", "content": prompt}],
+          }))
+          ')
 
-          RESPONSE=$(curl -s -X POST https://api.anthropic.com/v1/messages \
+          RESPONSE=$(curl -sS -X POST https://api.anthropic.com/v1/messages \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
             -H "content-type: application/json" \
-            -d "{
-              \"model\": \"claude-sonnet-4-6\",
-              \"max_tokens\": 1024,
-              \"messages\": [{\"role\": \"user\", \"content\": $(echo "$PROMPT" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')}]
-            }")
+            -d "$REQUEST")
 
           NOTES=$(echo "$RESPONSE" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["content"][0]["text"])' 2>/dev/null || echo "")
-          echo "notes<<EOF" >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "notes<<GFKEOF"
+            echo "$NOTES"
+            echo "GFKEOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Update release body
         if: steps.notes.outputs.notes != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          NOTES: ${{ steps.notes.outputs.notes }}
         run: |
-          INSTALL_BLOCK="## Install
+          # Compose the body in Python to keep the install code-fence intact
+          # (raw fences at column 0 would terminate the YAML block scalar).
+          python3 - <<'PYEOF' > /tmp/release_notes.md
+          import os
+          notes = os.environ.get("NOTES", "")
+          install = "\n".join([
+              "## Install",
+              "",
+              "```bash",
+              "gh skill install thinkyou0714/github-flow-kit pr-respond     --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit release-notes  --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit issue-triage   --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit repo-tour      --agent claude-code --scope user",
+              "```",
+          ])
+          print(f"{notes}\n\n{install}")
+          PYEOF
 
-\`\`\`bash
-gh skill install thinkyou0714/github-flow-kit pr-respond     --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit release-notes  --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit issue-triage   --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit repo-tour      --agent claude-code --scope user
-\`\`\`"
-
-          FULL_NOTES="${{ steps.notes.outputs.notes }}
-
-${INSTALL_BLOCK}"
-
-          gh release edit "${{ github.ref_name }}" --notes "$FULL_NOTES"
+          gh release edit "$TAG" --notes-file /tmp/release_notes.md
