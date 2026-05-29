@@ -27,8 +27,8 @@ A malicious PR reviewer submits a comment containing:
 
 **Mitigation in SKILL.md:**
 Skills that process attacker-controlled text (`pr-respond`, `issue-triage`,
-`release-notes`) sanitize comment/issue/commit body text before processing.
-Detection patterns:
+`release-notes`, `repo-tour`) sanitize comment/issue/commit/file body text
+before processing. Detection patterns:
 ```
 </s>  <s>  [INST]  IGNORE PREVIOUS  SYSTEM:  <|im_start|>
 ignore all  new instructions  forget everything

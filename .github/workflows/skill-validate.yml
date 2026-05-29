@@ -5,12 +5,16 @@ on:
     paths:
       - '**/SKILL.md'
       - '**/references/**'
+      - 'tests/**'
+      - '.github/secret-patterns.txt'
       - '.github/workflows/skill-validate.yml'
   push:
     branches: [main]
     paths:
       - '**/SKILL.md'
       - '**/references/**'
+      - 'tests/**'
+      - '.github/secret-patterns.txt'
       - '.github/workflows/skill-validate.yml'
 
 # Validation only needs to read the checked-out code.
@@ -88,13 +92,9 @@ jobs:
       - name: Check for secrets in SKILL.md and references/
         run: |
           echo "Scanning for potential secrets..."
-          # Match real secret shapes (prefix + key material), not bare prefixes,
-          # so documentation that *names* the patterns isn't a false positive.
-          if grep -rEn \
-            -e "sk-ant-[A-Za-z0-9_-]{20,}" \
-            -e "ghp_[A-Za-z0-9]{36}" \
-            -e "AKIA[0-9A-Z]{16}" \
-            -e "-----BEGIN [A-Z ]*PRIVATE KEY-----" \
+          # Patterns live in .github/secret-patterns.txt so the scanner and the
+          # regression test (tests/test_secret_scan.py) share one source of truth.
+          if grep -rEnf .github/secret-patterns.txt \
             ./*/SKILL.md ./*/references/ 2>/dev/null; then
             echo "ERROR: Potential secret found in skill files"
             exit 1
@@ -123,3 +123,8 @@ jobs:
               sys.exit(1)
           print("All references exist.")
           EOF
+
+      - name: Run skill logic tests
+        run: |
+          python3 tests/test_scoring.py
+          python3 tests/test_secret_scan.py
