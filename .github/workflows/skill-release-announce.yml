@@ -15,7 +15,6 @@ concurrency:
 jobs:
   announce:
     runs-on: ubuntu-latest
-    continue-on-error: true
     # Secrets cannot be referenced in `if:` conditions, so expose the webhook
     # as a job-level env var and gate the step on `env` instead.
     # https://docs.github.com/actions/security-guides/using-secrets-in-github-actions

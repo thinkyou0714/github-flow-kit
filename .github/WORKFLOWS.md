@@ -39,11 +39,17 @@ applied. Use it as a baseline to make Actions reliable across all
    guaranteed on `ubuntu-latest`. Use `actions/setup-python` + an explicit
    `pip install`.
 
-6. **Keep `actions/*` versions current** (Renovate handles bumps here). For
-   stricter supply-chain posture, pin third-party actions to a full commit SHA.
+6. **Pin actions to a commit SHA.** `renovate.json` extends
+   `helpers:pinGitHubActionDigests`, so Renovate pins every `uses:` to a full
+   commit digest and keeps it updated — closing the mutable-tag supply-chain gap.
 
 7. **Lint workflows in CI** with `actionlint` (which also runs `shellcheck` on
-   `run:` steps — `shellcheck` is preinstalled on `ubuntu-latest`).
+   `run:` steps — `shellcheck` is preinstalled on `ubuntu-latest`). Pin the
+   linter version (`ACTIONLINT_VERSION`) so results are reproducible.
+
+8. **Don't mask failures with `continue-on-error`.** Let genuine errors surface
+   (red check / owner notification). Handle *expected* conditions explicitly
+   instead — e.g. exit 0 when an optional secret is unset.
 
 ## Required / optional secrets
 

@@ -1,5 +1,7 @@
 # github-flow-kit
 
+[![Skill Validation](https://github.com/thinkyou0714/github-flow-kit/actions/workflows/skill-validate.yml/badge.svg)](https://github.com/thinkyou0714/github-flow-kit/actions/workflows/skill-validate.yml)
+[![Lint Workflows](https://github.com/thinkyou0714/github-flow-kit/actions/workflows/actionlint.yml/badge.svg)](https://github.com/thinkyou0714/github-flow-kit/actions/workflows/actionlint.yml)
 [![GitHub release](https://img.shields.io/github/v/release/thinkyou0714/github-flow-kit?color=blue)](https://github.com/thinkyou0714/github-flow-kit/releases)
 [![License: MIT](https://img.shields.io/github/license/thinkyou0714/github-flow-kit)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/thinkyou0714/github-flow-kit?style=social)](https://github.com/thinkyou0714/github-flow-kit/stargazers)
@@ -186,14 +188,18 @@ Yes. After install, edit `~/.claude/skills/<skill-name>/references/*.md`. Your c
 
 ## Secrets Setup (for CI/CD features)
 
-The GitHub Actions workflows in this repo require these secrets in your fork:
+These secrets are **all optional** — each workflow detects a missing secret and
+skips that step gracefully, so CI stays green without them:
 
-| Secret | Required for | How to get |
+| Secret | Enables | How to get |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | `auto-release-notes`, `weekly-triage` | [console.anthropic.com](https://console.anthropic.com/) |
-| `SLACK_WEBHOOK_URL` | `skill-release-announce` | Slack app settings → Incoming Webhooks |
+| `ANTHROPIC_API_KEY` | AI summaries in `auto-release-notes`, `weekly-triage` | [console.anthropic.com](https://console.anthropic.com/) |
+| `SLACK_WEBHOOK_URL` | Slack post in `skill-release-announce` | Slack app settings → Incoming Webhooks |
 
 Set them at: `github.com/YOUR_ORG/YOUR_REPO` → Settings → Secrets and variables → Actions
+
+> CI/workflow conventions and a portable hardening checklist live in
+> [`.github/WORKFLOWS.md`](.github/WORKFLOWS.md).
 
 ---
 
