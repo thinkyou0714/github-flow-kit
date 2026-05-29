@@ -88,11 +88,13 @@ jobs:
       - name: Check for secrets in SKILL.md and references/
         run: |
           echo "Scanning for potential secrets..."
-          if grep -rn \
-            -e "sk-ant-" \
-            -e "ghp_" \
-            -e "AKIA[0-9A-Z]" \
-            -e "-----BEGIN.*PRIVATE" \
+          # Match real secret shapes (prefix + key material), not bare prefixes,
+          # so documentation that *names* the patterns isn't a false positive.
+          if grep -rEn \
+            -e "sk-ant-[A-Za-z0-9_-]{20,}" \
+            -e "ghp_[A-Za-z0-9]{36}" \
+            -e "AKIA[0-9A-Z]{16}" \
+            -e "-----BEGIN [A-Z ]*PRIVATE KEY-----" \
             ./*/SKILL.md ./*/references/ 2>/dev/null; then
             echo "ERROR: Potential secret found in skill files"
             exit 1
