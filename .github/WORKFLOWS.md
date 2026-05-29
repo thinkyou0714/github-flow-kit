@@ -59,6 +59,24 @@ applied. Use it as a baseline to make Actions reliable across all
 | `ANTHROPIC_API_KEY` | auto-release-notes, weekly-triage | Step skips AI generation gracefully. |
 | `SLACK_WEBHOOK_URL` | skill-release-announce | Slack step is skipped. |
 
+## Enforce CI (branch protection)
+
+Green checks only matter if they're required to merge. On `main`, add a
+**branch protection rule** (or repository ruleset) that requires these status
+checks to pass before merging:
+
+- `validate` (from `skill-validate.yml`)
+- `actionlint` (from `actionlint.yml`)
+
+Recommended companion settings: require a PR before merging, require branches to
+be up to date, and dismiss stale approvals on new commits. Configure at
+`Settings → Branches → Add branch protection rule` (or `Settings → Rules`).
+
+> Note: if Actions ever fail to *start* (jobs go red in ~1s as a
+> "startup failure" before any step runs), the cause is repository-level, not
+> the YAML — check `Settings → Actions → General` (Actions enabled + allowed
+> actions) and the account's Actions minutes/spending limit.
+
 ## Porting to other `thinkyou0714/*` repos
 
 Copy `actionlint.yml` first — it catches the mistakes above on every PR. Then
@@ -66,6 +84,7 @@ adapt the relevant workflows, and run through the checklist for each. Validate
 locally before pushing:
 
 ```bash
-bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+# Pin the version to match actionlint.yml (ACTIONLINT_VERSION).
+bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
 ./actionlint -color
 ```
