@@ -7,6 +7,27 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+- `.github/workflows/actionlint.yml`: meta-CI that lints all workflows (syntax + shellcheck) on every PR touching `.github/workflows/`
+- `.github/WORKFLOWS.md`: GitHub Actions hardening checklist and conventions for cross-repo reuse
+- `tests/`: golden tests — scoring-rubric arithmetic/bands and the secret-scanner (real-secret detection + documentation false-positive guard), run in CI
+- `.github/secret-patterns.txt`: single source of truth for secret patterns, shared by the scanner and its test
+- `pr-respond`: secret-pattern halt and a CI `--auto-push` gate (`GITHUB_FLOW_KIT_ALLOW_PUSH`)
+- `issue-triage`: injection-marker and secret-pattern handling for untrusted issue bodies
+- `release-notes` / `repo-tour`: untrusted-input handling for commit/PR/file text
+
+### Changed
+- Hardened all workflows: least-privilege `permissions`, `concurrency` groups, untrusted input routed through `env` (script-injection safe), removed failure-masking `continue-on-error`
+- `skill-release-announce`: gate the Slack step on `env` (secrets can't be used in `if:`)
+- `skill-validate`: explicit `actions/setup-python` + `pip install pyyaml`; refreshed valid model list
+- `renovate.json`: pin GitHub Action `uses:` to commit digests (`helpers:pinGitHubActionDigests`)
+- `SECURITY.md`: aligned the A1–A4 threat-model claims with the actual skill implementations
+
+### Fixed
+- `package.json` license corrected from `ISC` to `MIT`
+
 ## [0.2.0] — 2026-04-22
 
 ### Added

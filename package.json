@@ -11,9 +11,20 @@
     "type": "git",
     "url": "git+https://github.com/thinkyou0714/github-flow-kit.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "skills",
+    "github",
+    "pr-review",
+    "release-notes",
+    "issue-triage",
+    "repo-tour",
+    "automation",
+    "developer-tools"
+  ],
+  "author": "thinkyou0714",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/thinkyou0714/github-flow-kit/issues"
   },

@@ -5,16 +5,40 @@ on:
     paths:
       - '**/SKILL.md'
       - '**/references/**'
+      - 'tests/**'
+      - '.github/secret-patterns.txt'
+      - '.github/workflows/skill-validate.yml'
   push:
     branches: [main]
     paths:
       - '**/SKILL.md'
+      - '**/references/**'
+      - 'tests/**'
+      - '.github/secret-patterns.txt'
+      - '.github/workflows/skill-validate.yml'
+
+# Validation only needs to read the checked-out code.
+permissions:
+  contents: read
+
+concurrency:
+  group: skill-validate-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # PyYAML is NOT guaranteed to be preinstalled on the runner image, so set
+      # up Python explicitly and install the dependency to keep validation green.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python3 -m pip install --quiet pyyaml
 
       - name: Validate SKILL.md frontmatter
         run: |
@@ -23,13 +47,15 @@ jobs:
 
           REQUIRED_FIELDS = ['name', 'description', 'allowed-tools']
           VALID_MODELS = [
+              'claude-opus-4-8',
               'claude-sonnet-4-6',
               'claude-opus-4-7',
               'claude-haiku-4-5-20251001',
           ]
 
           errors = []
-          for skill_md in pathlib.Path('.').rglob('SKILL.md'):
+          skill_files = list(pathlib.Path('.').rglob('SKILL.md'))
+          for skill_md in skill_files:
               content = skill_md.read_text(encoding='utf-8')
               if not content.startswith('---'):
                   errors.append(f"{skill_md}: Missing frontmatter")
@@ -60,18 +86,16 @@ jobs:
               for e in errors:
                   print(f"  {e}")
               sys.exit(1)
-          print(f"All SKILL.md files valid ({len(list(pathlib.Path('.').rglob('SKILL.md')))} files checked).")
+          print(f"All SKILL.md files valid ({len(skill_files)} files checked).")
           EOF
 
       - name: Check for secrets in SKILL.md and references/
         run: |
           echo "Scanning for potential secrets..."
-          if grep -rn \
-            -e "sk-ant-" \
-            -e "ghp_" \
-            -e "AKIA[0-9A-Z]" \
-            -e "-----BEGIN.*PRIVATE" \
-            */SKILL.md */references/ 2>/dev/null; then
+          # Patterns live in .github/secret-patterns.txt so the scanner and the
+          # regression test (tests/test_secret_scan.py) share one source of truth.
+          if grep -rEnf .github/secret-patterns.txt \
+            ./*/SKILL.md ./*/references/ 2>/dev/null; then
             echo "ERROR: Potential secret found in skill files"
             exit 1
           fi
@@ -99,3 +123,8 @@ jobs:
               sys.exit(1)
           print("All references exist.")
           EOF
+
+      - name: Run skill logic tests
+        run: |
+          python3 tests/test_scoring.py
+          python3 tests/test_secret_scan.py
