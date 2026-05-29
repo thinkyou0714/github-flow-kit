@@ -93,7 +93,7 @@ jobs:
             -e "ghp_" \
             -e "AKIA[0-9A-Z]" \
             -e "-----BEGIN.*PRIVATE" \
-            */SKILL.md */references/ 2>/dev/null; then
+            ./*/SKILL.md ./*/references/ 2>/dev/null; then
             echo "ERROR: Potential secret found in skill files"
             exit 1
           fi

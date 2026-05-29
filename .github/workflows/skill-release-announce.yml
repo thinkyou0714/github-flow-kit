@@ -30,6 +30,9 @@ jobs:
           RELEASE_URL: ${{ github.event.release.html_url }}
           RELEASE_BODY: ${{ github.event.release.body }}
         run: |
+          # Single quotes are intentional: Python reads values from os.environ,
+          # and the backticks below are literal text, not shell command substitution.
+          # shellcheck disable=SC2016
           PAYLOAD=$(python3 -c '
           import json, os
           tag = os.environ.get("TAG", "")
