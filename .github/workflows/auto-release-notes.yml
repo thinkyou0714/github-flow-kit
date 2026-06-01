@@ -97,10 +97,12 @@ jobs:
               "## Install",
               "",
               "```bash",
-              "gh skill install thinkyou0714/github-flow-kit pr-respond     --agent claude-code --scope user",
-              "gh skill install thinkyou0714/github-flow-kit release-notes  --agent claude-code --scope user",
-              "gh skill install thinkyou0714/github-flow-kit issue-triage   --agent claude-code --scope user",
-              "gh skill install thinkyou0714/github-flow-kit repo-tour      --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit pr-respond             --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit release-notes          --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit issue-triage           --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit repo-tour              --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit gh-pr-perm-audit       --agent claude-code --scope user",
+              "gh skill install thinkyou0714/github-flow-kit gh-repo-security-audit --agent claude-code --scope user",
               "```",
           ])
           print(f"{notes}\n\n{install}")

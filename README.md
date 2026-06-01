@@ -14,7 +14,7 @@
 ## Why github-flow-kit?
 
 - **Zero setup** — install one command, use immediately. No API keys, no config files.
-- **4 skills for every GitHub workflow** — from first PR review to weekly backlog cleanup.
+- **6 skills for every GitHub workflow** — from first PR review to weekly backlog cleanup and security audits.
 - **Safe by design** — never modifies migrations, `.env`, auth, or CI files without asking.
 
 ---
@@ -31,9 +31,9 @@ done
 Or install individually:
 
 ```bash
-gh skill install thinkyou0714/github-flow-kit pr-respond     --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit release-notes  --agent claude-code --scope user
-gh skill install thinkyou0714/github-flow-kit issue-triage   --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit pr-respond             --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit release-notes          --agent claude-code --scope user
+gh skill install thinkyou0714/github-flow-kit issue-triage           --agent claude-code --scope user
 gh skill install thinkyou0714/github-flow-kit repo-tour              --agent claude-code --scope user
 gh skill install thinkyou0714/github-flow-kit gh-pr-perm-audit       --agent claude-code --scope user
 gh skill install thinkyou0714/github-flow-kit gh-repo-security-audit --agent claude-code --scope user
@@ -204,7 +204,7 @@ Each skill run costs approximately **¥10-40** in Claude API usage (claude-sonne
 ## FAQ
 
 **Q: Do I need a paid Claude Code plan?**
-No. All 4 skills work on the Free plan.
+No. All 6 skills work on the Free plan.
 
 **Q: `gh skill install` failed with "command not found"**
 You need GitHub CLI v2.90.0 or later. Run `gh --version` to check. Update: `gh upgrade` or download from [cli.github.com](https://cli.github.com/).

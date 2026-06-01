@@ -13,6 +13,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 RUBRIC = REPO / "issue-triage" / "references" / "scoring-rubric.md"
+SKILL = REPO / "issue-triage" / "SKILL.md"
 
 
 # score = impact * (6 - effort) + urgency   (see issue-triage/SKILL.md)
@@ -89,6 +90,48 @@ class TestScoringRubric(unittest.TestCase):
         self.assertEqual(band(9), "🟢 Backlog")
         self.assertEqual(band(5), "🟢 Backlog")
         self.assertEqual(band(4), "⚪ 低優先度")
+
+
+def label_lower_bounds(text: str):
+    """Lower score bound for each priority:* label (critical→low order)."""
+    bounds = []
+    for label in ("critical", "high", "medium", "low"):
+        m = re.search(rf'priority:{label}".*?score\s*([^\n]+)', text)
+        if not m:
+            continue
+        expr = m.group(1)
+        ge = re.search(r"(?:≥|>=)\s*(\d+)", expr)
+        rng = re.search(r"(\d+)\s*-\s*\d+", expr)
+        lt = re.search(r"<\s*(\d+)", expr)
+        if ge:
+            bounds.append(int(ge.group(1)))
+        elif rng:
+            bounds.append(int(rng.group(1)))
+        elif lt:
+            bounds.append(0)
+    return bounds
+
+
+class TestLabelBands(unittest.TestCase):
+    """Step 4 priority:* labels must mirror the Step 3 display bands 1:1."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.bounds = label_lower_bounds(SKILL.read_text(encoding="utf-8"))
+
+    def test_four_labels_parsed(self):
+        self.assertEqual(len(self.bounds), 4, f"Parsed bounds: {self.bounds}")
+
+    def test_label_bounds_match_display_bands(self):
+        # Lower bounds: critical≥15, high 10-14, medium 5-9, low <5.
+        self.assertEqual(self.bounds, [15, 10, 5, 0])
+
+    def test_each_label_lands_in_its_display_band(self):
+        critical, high, medium, low = self.bounds
+        self.assertEqual(band(critical), "🔴 Sprint必須")
+        self.assertEqual(band(high), "🟡 Sprint推奨")
+        self.assertEqual(band(medium), "🟢 Backlog")
+        self.assertEqual(band(low), "⚪ 低優先度")
 
 
 if __name__ == "__main__":

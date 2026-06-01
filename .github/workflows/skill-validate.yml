@@ -60,7 +60,9 @@ jobs:
               if not content.startswith('---'):
                   errors.append(f"{skill_md}: Missing frontmatter")
                   continue
-              parts = content.split('---')
+              # maxsplit=2 so a '---' horizontal rule in the body can't corrupt
+              # the frontmatter slice (parts[1]).
+              parts = content.split('---', 2)
               if len(parts) < 3:
                   errors.append(f"{skill_md}: Malformed frontmatter (no closing ---)")
                   continue
@@ -126,5 +128,6 @@ jobs:
 
       - name: Run skill logic tests
         run: |
-          python3 tests/test_scoring.py
-          python3 tests/test_secret_scan.py
+          # Auto-discovers every tests/test_*.py (scoring, secret-scan, inventory),
+          # so new test files run in CI without editing this workflow.
+          python3 -m unittest discover -s tests -p 'test_*.py' -v

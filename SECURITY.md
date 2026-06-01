@@ -27,13 +27,13 @@ A malicious PR reviewer submits a comment containing:
 
 **Mitigation in SKILL.md:**
 Skills that process attacker-controlled text (`pr-respond`, `issue-triage`,
-`release-notes`, `repo-tour`) sanitize comment/issue/commit/file body text
-before processing. Detection patterns:
+`release-notes`, `repo-tour`) treat comment/issue/commit/file body text as data,
+not instructions. They scan for the same canonical injection markers:
 ```
-</s>  <s>  [INST]  IGNORE PREVIOUS  SYSTEM:  <|im_start|>
-ignore all  new instructions  forget everything
+</s>  [INST]  IGNORE PREVIOUS  SYSTEM:  <|im_start|>
 ```
-On detection: truncate to first 100 chars, flag with `⚠️ POSSIBLE INJECTION from @<author>`, continue with sanitized text.
+On detection: ignore the embedded directive, process from metadata / sanitized
+text only, and flag with `⚠️ POSSIBLE INJECTION from @<author>`.
 
 ### A2: Secret Exfiltration (High Risk)
 

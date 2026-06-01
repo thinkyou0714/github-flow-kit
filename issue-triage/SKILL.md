@@ -16,8 +16,11 @@ Prioritize your open issue backlog with structured scoring.
 
 ```bash
 gh issue list --state open --limit 200 \
-  --json number,title,body,labels,comments,createdAt,updatedAt,reactions
+  --json number,title,body,labels,milestone,comments,createdAt,updatedAt,reactionGroups
 ```
+
+> `gh issue list` exposes reactions as `reactionGroups` (there is no `reactions`
+> field), and `milestone` is required for the "+1 if milestone" urgency bonus.
 
 If `--label` provided: add `--label <label>` to the command.
 If total > 200: warn `"200件以上のissueがあります。--label で絞り込んでください。"`
@@ -42,7 +45,7 @@ Read `references/scoring-rubric.md` ONLY WHEN scoring is ambiguous (Impact and E
 score = impact × (6 - effort) + urgency_bonus
 ```
 
-Max possible: 5 × 5 + 3 = 28
+Urgency bonuses stack (max +7), so the max possible: 5 × 5 + 7 = 32
 
 ### Impact Score (1-5)
 - 5: Security / data loss / crash / core feature unusable
@@ -107,19 +110,20 @@ Write to `TRIAGE.md` at repo root.
 
 ## Step 4: Apply Labels (unless --dry-run)
 
+Label bands mirror the Step 3 display bands exactly (one label per band):
 ```bash
-gh issue edit <number> --add-label "priority:critical"  # score ≥20
-gh issue edit <number> --add-label "priority:high"      # score 15-19
-gh issue edit <number> --add-label "priority:medium"    # score 10-14
-gh issue edit <number> --add-label "priority:low"       # score <10
+gh issue edit <number> --add-label "priority:critical"  # 🔴 Sprint必須  score ≥15
+gh issue edit <number> --add-label "priority:high"      # 🟡 Sprint推奨  score 10-14
+gh issue edit <number> --add-label "priority:medium"    # 🟢 Backlog     score 5-9
+gh issue edit <number> --add-label "priority:low"       # ⚪ 低優先度    score <5
 ```
 
 Create labels if they don't exist:
 ```bash
-gh label create "priority:critical" --color "B60205" --description "Score >= 20" --force
-gh label create "priority:high"     --color "E11D48" --description "Score 15-19" --force
-gh label create "priority:medium"   --color "F97316" --description "Score 10-14" --force
-gh label create "priority:low"      --color "84CC16" --description "Score < 10" --force
+gh label create "priority:critical" --color "B60205" --description "Score >= 15 (Sprint必須)" --force
+gh label create "priority:high"     --color "E11D48" --description "Score 10-14 (Sprint推奨)" --force
+gh label create "priority:medium"   --color "F97316" --description "Score 5-9 (Backlog)"      --force
+gh label create "priority:low"      --color "84CC16" --description "Score < 5 (低優先度)"      --force
 ```
 
 ## Summary Output
