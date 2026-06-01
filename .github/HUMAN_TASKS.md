@@ -4,7 +4,8 @@ These items can't be completed from CI / the agent (no branch-protection MCP
 tool, no `gh` CLI in the sandbox, and some are outward-facing/irreversible).
 They're the remaining gap to a "perfect" repo. Check each off when done.
 
-Tracking PR: https://github.com/thinkyou0714/github-flow-kit/pull/6
+Status: the v0.3.0 code-side work (PRs #1–#9) has merged to `main`. The items
+below are the operational / outward-facing tasks that still need a human.
 
 ---
 
@@ -35,22 +36,22 @@ variables → Actions.
 - [ ] `ANTHROPIC_API_KEY` — AI summaries in auto-release-notes & weekly-triage
 - [ ] `SLACK_WEBHOOK_URL` — release announcement in skill-release-announce
 
-## 3. Merge PR #6 — HIGH
+## 3. Merge release PRs — DONE
 
-After branch protection is on and checks are green.
-
-- [ ] Squash-merge PR #6 into `main`
+- [x] PR #6 (workflow hardening + golden tests) merged
+- [x] PR #2 (security-audit skills, v0.3.0) merged
 
 ## 4. Triage open Renovate / feature PRs — MEDIUM
 
-- [ ] PR #4 — `actions/checkout` v4 → v6 (review, then merge)
-- [ ] PR #3 — `zenn-cli` 0.4.7 → 0.4.8 (review, then merge)
-- [ ] PR #2 — security-audit skills v0.3.0 (review; rebase on #6 once merged)
+- [x] PR #4 — `actions/checkout` → v6 (merged)
+- [x] PR #3 — `zenn-cli` → 0.4.8 (merged)
+- [x] PR #8 — `python` → 3.14 (merged)
+- [x] PR #9 — `actions/setup-python` → v6 (merged)
+- [ ] Keep reviewing future Renovate PRs as they open
 
 ## 5. Release hygiene — LOW
 
-- [ ] Tag a release once #6 merges; move CHANGELOG `[Unreleased]` → version
-- [ ] Decide version number (current `package.json` is 0.2.0; PR #2 targets 0.3.0)
+- [ ] Tag/publish the `v0.3.0` GitHub release (`package.json` + `CHANGELOG` are already at 0.3.0)
 
 ## 6. External validation / proof — LOW
 
@@ -61,5 +62,6 @@ After branch protection is on and checks are green.
 ---
 
 _Everything code-side (workflow hardening, security alignment, golden tests,
-metadata) is implemented and passing in PR #6. The items above are operational
-or outward-facing and require a human with repo admin / publishing rights._
+metadata) is implemented, merged, and passing on `main`. The items above are
+operational or outward-facing and require a human with repo admin / publishing
+rights._

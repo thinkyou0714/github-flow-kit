@@ -14,7 +14,7 @@ Ready-to-paste text for submitting to lists and platforms.
 
 **Category:** Tools / Skill Packs
 
-**Description:** 4-skill pack for Claude Code that automates daily GitHub workflows.
+**Description:** 6-skill pack for Claude Code that automates daily GitHub workflows.
 Installs via `gh skill install` — no API keys or configuration required.
 
 **Skills:**
@@ -22,6 +22,8 @@ Installs via `gh skill install` — no API keys or configuration required.
 - `/release-notes` — Generate user-facing + developer changelogs from git log
 - `/issue-triage` — Score and prioritize issue backlog by Impact × Effort × Urgency
 - `/repo-tour` — Generate architecture overview + Mermaid diagram for any repo
+- `/gh-pr-perm-audit` — Flag repos where Actions can approve PRs (review-bypass)
+- `/gh-repo-security-audit` — OpenSSF posture: token perms, branch protection, Dependabot
 
 **Links:**
 - GitHub: https://github.com/thinkyou0714/github-flow-kit
@@ -37,17 +39,19 @@ Installs via `gh skill install` — no API keys or configuration required.
 
 ## Product Hunt
 
-**Tagline:** `4 Claude Code skills that automate your entire GitHub workflow`
+**Tagline:** `6 Claude Code skills that automate your entire GitHub workflow`
 
 **Description:**
 ```
 github-flow-kit is a free skill pack for Claude Code that automates the GitHub tasks you do every day.
 
-Install 4 skills with one command:
+Install 6 skills with one command:
 - /pr-respond — Handle all PR review comments in 3 minutes instead of 50
 - /release-notes — Auto-generate changelogs from your git history
 - /issue-triage — Score your issue backlog by impact × effort
 - /repo-tour — Understand any codebase in 2 minutes
+- /gh-pr-perm-audit — Flag repos where Actions can self-approve PRs
+- /gh-repo-security-audit — OpenSSF security posture across all your repos
 
 Zero configuration. No API keys. Just gh skill install and go.
 
@@ -65,19 +69,21 @@ Open source. MIT license.
 ## Hacker News — Show HN
 
 ```
-Show HN: github-flow-kit – 4 Claude Code skills for GitHub automation
+Show HN: github-flow-kit – 6 Claude Code skills for GitHub automation
 
 I built a free skill pack for Claude Code that automates the GitHub tasks I was spending 3-4 hours a week on.
 
-The 4 skills:
+The 6 skills:
 - /pr-respond: Auto-classify PR comments (MUST-FIX/ACK/DISCUSS/SKIP) and handle each appropriately. Cuts 50min review responses to 3min.
 - /release-notes: Generate changelogs for both users and developers from git log + merged PRs.
 - /issue-triage: Score open issues by Impact × Effort × Urgency. Writes TRIAGE.md for sprint planning.
 - /repo-tour: Parse any repo's structure and generate a REPO_TOUR.md + Mermaid architecture diagram.
+- /gh-pr-perm-audit: Flag repos where GitHub Actions can self-approve PRs (a required-review bypass).
+- /gh-repo-security-audit: OpenSSF-aligned posture audit (token perms, branch protection, Dependabot).
 
 Install: gh skill install thinkyou0714/github-flow-kit <skill> --agent claude-code --scope user
 
-All 4 require only GitHub CLI v2.90.0+ and Claude Code. No config files, no API keys.
+All 6 require only GitHub CLI v2.90.0+ and Claude Code. No config files, no API keys.
 
 GitHub: https://github.com/thinkyou0714/github-flow-kit
 ```
@@ -119,7 +125,7 @@ gh skill install thinkyou0714/github-flow-kit pr-respond \
 
 30 秒で終わる。API キー設定なし。無料。
 
-PR 対応・リリースノート・issue 優先付け・リポジトリ解析の 4 スキルあり。
+PR 対応・リリースノート・issue 優先付け・リポジトリ解析ほか 6 スキルあり。
 ```
 
 **Tweet 4/4 (CTA):**

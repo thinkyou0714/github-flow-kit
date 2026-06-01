@@ -27,7 +27,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue list --state open --limit 50 \
-            --json number,title,body,labels,comments,createdAt,reactionGroups \
+            --json number,title,body,labels,milestone,comments,createdAt,reactionGroups \
             > /tmp/issues.json
           echo "count=$(python3 -c 'import json; print(len(json.load(open("/tmp/issues.json"))))')" >> "$GITHUB_OUTPUT"
 
@@ -57,14 +57,34 @@ jobs:
               if l < 1500: return 3
               return 4
 
+          def thumbs_up(reaction_groups):
+              # The rubric counts 👍 only, not every reaction type.
+              for rg in reaction_groups:
+                  if rg.get('content') == 'THUMBS_UP':
+                      return rg.get('users', {}).get('totalCount', 0)
+              return 0
+
+          # Urgency mirrors issue-triage/references/scoring-rubric.md (max +7).
+          def urgency_bonus(issue, age, comments):
+              names = [l['name'].lower() for l in issue.get('labels', [])]
+              bonus = 0
+              if age > 30 and comments >= 3:
+                  bonus += 2
+              if issue.get('milestone'):
+                  bonus += 1
+              if thumbs_up(issue.get('reactionGroups', [])) >= 5:
+                  bonus += 1
+              if any(n in ('urgent', 'hotfix', 'p0') for n in names):
+                  bonus += 3
+              return bonus
+
           scored = []
           for i in issues:
               imp = impact(i.get('labels', []))
               eff = effort(i.get('body', ''))
               age = (now - datetime.datetime.fromisoformat(i['createdAt'].replace('Z','+00:00'))).days
               comments = i.get('comments', 0)
-              reactions = sum(rg.get('users', {}).get('totalCount', 0) for rg in i.get('reactionGroups', []))
-              urgency = (2 if age > 30 and comments >= 3 else 0) + (1 if reactions >= 5 else 0)
+              urgency = urgency_bonus(i, age, comments)
               score = imp * (6 - eff) + urgency
               scored.append({**i, 'score': score, 'impact': imp, 'effort': eff})
 

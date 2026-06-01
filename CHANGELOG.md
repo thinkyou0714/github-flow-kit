@@ -7,6 +7,23 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Fixed
+- `issue-triage`: `gh issue list` fetched the non-existent `reactions` JSON field (would error at runtime) — switched to `reactionGroups` and added `milestone`. Corrected the documented max score (`5 × 5 + 7 = 32`) and reconciled the `priority:*` label bands with the Step 3 display bands.
+- `weekly-triage` workflow: issue scoring now matches the documented rubric (milestone `+1`, `urgent`/`hotfix`/`P0` label `+3`, 👍-only reactions) instead of a partial 2-bonus formula.
+- Book (`ch03`): the issue-triage formula was taught as `5 × (6 − Effort) + Urgency` (Impact hardcoded to 5) with miscomputed examples — corrected to `Impact × (6 − Effort) + Urgency`. Replaced non-existent `release-notes` (`--version`/`--from`/`--to`) and `repo-tour` (`--output <file>`) flags with the real ones.
+- Documentation skill count: "4 skills" → "6 skills" across README prose, the issue/feature/discussion-form dropdowns, the `auto-release-notes` install block, and `PROMOTION.md`.
+- `package.json`: replaced the shields-badge string in `description` with real text; removed the phantom `main: index.js`.
+- Aligned the injection-marker list across the skills and `SECURITY.md`; added the missing `[0.3.0]` compare link; refreshed `HUMAN_TASKS.md` to the current (merged) state.
+
+### Added
+- `tests/test_skill_inventory.py`: a CI guard that derives the skill set from `*/SKILL.md` and fails if the README install lines or the issue/feature/discussion dropdowns drift out of sync — preventing the "4 vs 6 skills" class of bug from recurring.
+- `tests/test_scoring.py`: assertions that the `priority:*` label bands mirror the display bands.
+
+### Changed
+- `skill-validate` CI runs `python3 -m unittest discover` (auto-includes new test files); the SKILL.md frontmatter parser is hardened with `split('---', 2)`.
+
 ## [0.3.0] — 2026-05-31
 
 ### Added
@@ -55,6 +72,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ### Changed
 - `articles/zenn-pr-respond-guide.md` renamed to `articles/github-flow-kit-pr-respond.md` (slug alignment)
 
+[0.3.0]: https://github.com/thinkyou0714/github-flow-kit/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/thinkyou0714/github-flow-kit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/thinkyou0714/github-flow-kit/releases/tag/v0.1.0
 

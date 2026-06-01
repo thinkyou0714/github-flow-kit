@@ -22,6 +22,8 @@ body:
         - release-notes
         - issue-triage
         - repo-tour
+        - gh-pr-perm-audit
+        - gh-repo-security-audit
         - N/A (new skill)
   - type: textarea
     id: problem

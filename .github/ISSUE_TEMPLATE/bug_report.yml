@@ -11,6 +11,8 @@ body:
         - release-notes
         - issue-triage
         - repo-tour
+        - gh-pr-perm-audit
+        - gh-repo-security-audit
     validations:
       required: true
   - type: input
