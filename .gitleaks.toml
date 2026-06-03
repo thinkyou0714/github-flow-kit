@@ -1,0 +1,10 @@
+title = "github-flow-kit"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow synthetic secret scanner fixtures while scanning repository content."
+paths = [
+  '''tests/test_secret_scan.py''',
+]
