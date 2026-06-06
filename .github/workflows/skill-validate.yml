@@ -22,9 +22,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: skill-validate-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   validate:
     runs-on: ubuntu-latest
