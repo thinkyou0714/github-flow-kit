@@ -9,7 +9,6 @@ The workflow and this test read the SAME pattern file
 - the committed SKILL.md / references tree must currently be clean.
 """
 import re
-import sys
 import unittest
 from pathlib import Path
 
