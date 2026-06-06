@@ -8,16 +8,18 @@ on:
 # This workflow only reads issues and writes to the run's job summary,
 # so it needs read-only access.
 permissions:
-  issues: read
   contents: read
 
 concurrency:
-  group: weekly-triage
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   triage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
