@@ -25,6 +25,18 @@ Claude Code loads `references/` as context automatically.
 
 ---
 
+## Running Tests / Previewing the Promo Articles
+
+Run the Python unit tests before opening a PR:
+
+```bash
+npm test
+```
+
+`zenn-cli` is kept as a devDependency because this repository owns local `articles/` drafts and the `books/claude-code-skill-pack` content. Use `npm run preview` to check those promo articles locally, and keep `npm run new:article` available for new Zenn drafts.
+
+---
+
 ## Improve references/ (Most Valuable Contribution)
 
 Found a comment pattern that was misclassified? Open an Issue with label `references-improvement`:

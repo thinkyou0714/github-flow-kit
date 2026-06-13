@@ -1,8 +1,10 @@
 {
   "name": "github-flow-kit",
   "version": "0.3.0",
+  "private": true,
   "description": "Claude Code skill pack that automates GitHub workflows: PR review responses, release notes, issue triage, repo onboarding, and security audits.",
   "scripts": {
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "new:article": "zenn new:article",
     "preview": "zenn preview"
   },
