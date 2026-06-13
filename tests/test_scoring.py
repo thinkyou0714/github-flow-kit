@@ -11,25 +11,11 @@ import re
 import unittest
 from pathlib import Path
 
+from scripts.triage_scoring import band, score
+
 REPO = Path(__file__).resolve().parents[1]
 RUBRIC = REPO / "issue-triage" / "references" / "scoring-rubric.md"
 SKILL = REPO / "issue-triage" / "SKILL.md"
-
-
-# score = impact * (6 - effort) + urgency   (see issue-triage/SKILL.md)
-def score(impact: int, effort: int, urgency: int) -> int:
-    return impact * (6 - effort) + urgency
-
-
-# Display bands (issue-triage/SKILL.md Step 3 + scoring-rubric.md)
-def band(s: int) -> str:
-    if s >= 15:
-        return "🔴 Sprint必須"
-    if s >= 10:
-        return "🟡 Sprint推奨"
-    if s >= 5:
-        return "🟢 Backlog"
-    return "⚪ 低優先度"
 
 
 def parse_examples(text: str):
