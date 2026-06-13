@@ -130,3 +130,8 @@ jobs:
           # Auto-discovers every tests/test_*.py (scoring, secret-scan, inventory),
           # so new test files run in CI without editing this workflow.
           python3 -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Spell check (codespell)
+        run: |
+          python3 -m pip install --quiet codespell
+          codespell
