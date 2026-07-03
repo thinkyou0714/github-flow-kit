@@ -252,3 +252,12 @@ MIT — Free to use, fork, and customize.
 *Built with [gh skill](https://cli.github.com/manual/gh_skill) · Powered by [Claude Code](https://code.claude.com/)*
 
 ⭐ If github-flow-kit saved you time, a star helps others find it!
+
+## Claude Code で使う (web / cloud 対応)
+
+このリポジトリは **Claude Code on the web** に対応しています。
+
+- 依存は `.claude/bootstrap.sh`（SessionStart）が `npm ci` で自動インストール（Python テストは stdlib のみ）。
+- クラウドセッションは `AGENTS.md` と `.claude/skills/`（例: `run-tests`）を自動ロード。配布用 6 skill は各トップレベル dir。
+- MCP は本リポジトリではローカル専用。詳細は
+  [`.github/docs/claude-code-web-readiness.md`](https://github.com/thinkyou0714/.github/blob/main/docs/claude-code-web-readiness.md)。
