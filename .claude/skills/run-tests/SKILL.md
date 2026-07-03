@@ -1,6 +1,8 @@
 ---
-name: run-tests
+allowed-tools: Bash(npm *) Bash(python3 *) Read Grep
 description: Run the github-flow-kit test suite and summarize failures. Use when asked to test, verify, or check a skill change.
+license: MIT
+name: run-tests
 ---
 
 Run the test suite and report results concisely.
