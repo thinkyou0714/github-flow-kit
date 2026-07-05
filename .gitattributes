@@ -1,0 +1,22 @@
+# Line-ending normalization (fixes "LF will be replaced by CRLF" churn on Windows)
+# 既定: リポジトリ内は LF。作業ツリーも LF でチェックアウト。
+* text=auto eol=lf
+
+# PowerShell / Windows バッチは CRLF を維持(実行系が CRLF 前提のため)
+*.ps1  text eol=crlf
+*.psm1 text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# バイナリ(差分・EOL変換しない)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.pyc binary
+*.woff binary
+*.woff2 binary
+
+# NOTE: 既存の追跡済ファイルへ一括反映するには別途 `git add --renormalize .`
+# (差分が大きくなるため専用コミットで人間が実行 — IMPROVEMENT-BACKLOG.md 参照)
